@@ -7,7 +7,10 @@ class BranUnicodeParser {
 
     getParsedUnicode() {
         const targetUnicodeKeys = {};
-        const keyMapping = this.keyMapping();
+        const keyMapping = {
+            k26: 'K26_65_A',
+            k27: 'K27_83_S'
+        };
 
         this.sourceUnicodeKeys.forEach(function (sourceUnicodeKey, index) {
             console.log(sourceUnicodeKey);
@@ -28,13 +31,6 @@ class BranUnicodeParser {
         });
 
         return targetUnicodeKeys;
-    }
-
-    keyMapping() {
-        return {
-                k26: 'K26_65_A',
-                k27: 'K27_83_S'
-        };
     }
 }
 
