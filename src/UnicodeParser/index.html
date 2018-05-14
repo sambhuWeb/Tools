@@ -53,132 +53,42 @@
 
     </main>
 
-    <!--<textarea rows="30" cols="70" id="unicode"></textarea>-->
-
     <script type="application/javascript">
-
-        document.querySelector('#parse').addEventListener('click', function(event){
-            const sourceUnicodeKeys = document.getElementById('unicodeInput').value.replace(/\r\n/g,"\n").split("\n");
-
-            console.log('Unicode Input', sourceUnicodeKeys);
-
-//            const targetUnicodeKeys = {};
-//            sourceUnicodeKeys.forEach(function (sourceBranahUnicodeKey, index) {
-//                console.log(sourceBranahUnicodeKey);
-//
-//                const mappedKeyIndex = keyMapping.hasOwnProperty(sourceBranahUnicodeKey.i)
-//                    ? keyMapping[sourceBranahUnicodeKey.i]
-//                    : sourceBranahUnicodeKey.i;
-//
-//                const key = {};
-//
-//                key.key = sourceBranahUnicodeKey.n;
-//                key.ctrlKey = sourceBranahUnicodeKey.c;
-//                key.shiftKey = sourceBranahUnicodeKey.s;
-//                key.ctrlAlt = sourceBranahUnicodeKey.t;
-//                key.ctrlAltShift = sourceBranahUnicodeKey.l;
-//
-//                targetUnicodeKeys[mappedKeyIndex] = key;
-//            });
-//
-//            console.log(targetUnicodeKeys);
-//            console.log('Json stringify', JSON.stringify(targetUnicodeKeys));
-//
-//            document.getElementById("parsedUnicode").innerHTML = JSON.stringify(targetUnicodeKeys, null, 4);
-
-        });
-
-        //Expected:
-
-        /*
-         //Expected Output
-         {
-             'K26_65_A': {
-             key: "ब",
-             ctrlKey: "",
-             shiftKey: "्",
-             ctrlAlt: "ctrlAlt",
-             ctrlAltShift: "ctrlAltShift",
-             },
-             'K27_83_S': {
-             key: "क",
-             ctrlKey: "",
-             shiftKey: "",
-             ctrlAlt: "ctrlAlt",
-             ctrlAltShift: "ctrlAltShift",
-             }
-         }
-
-
-         //Parsed Output
-         {
-             "K26_65_A" :
-             {
-                 "key":"ब",
-                 "ctrlKey":"0",
-                 "shiftKey":"",
-                 "ctrlAlt":"",
-                 "ctrlAltShift":""
-             },
-             "K27_83_S" :
-             {
-                 "key":"क",
-                 "ctrlKey":"0",
-                 "shiftKey":"",
-                 "ctrlAlt":"",
-                 "ctrlAltShift":""
-             }
-         }
-         */
 
         const keyMapping = {
             k26: 'K26_65_A',
             k27: 'K27_83_S'
         };
 
-        const sourceBranahUnicodeKeys = [
-            {
-                "i": "k26",
-                "c": "0", //ctrl
-                "n": "ब", //normal
-                "s": "", //shift
-                "l": "", //ctrl+alt+shift
-                "t": "", //ctrl_alt
-                "f": ""
-            }, {
-                "i": "k27",
-                "c": "0",
-                "n": "क",
-                "s": "",
-                "l": "",
-                "t": "",
-                "f": ""
-            }
-        ];
+        document.querySelector('#parse').addEventListener('click', function(event){
+            const sourceBranahUnicodeKeys = JSON.parse(document.getElementById('unicodeInput').value);
 
-        const targetUnicodeKeys = {};
-        sourceBranahUnicodeKeys.forEach(function (sourceBranahUnicodeKey, index) {
-            console.log(sourceBranahUnicodeKey);
+            console.log('Unicode Input', sourceBranahUnicodeKeys);
 
-            const mappedKeyIndex = keyMapping.hasOwnProperty(sourceBranahUnicodeKey.i)
-                ? keyMapping[sourceBranahUnicodeKey.i]
-                : sourceBranahUnicodeKey.i;
+            const targetUnicodeKeys = {};
+            sourceBranahUnicodeKeys.forEach(function (sourceBranahUnicodeKey, index) {
+                console.log(sourceBranahUnicodeKey);
 
-            const key = {};
+                const mappedKeyIndex = keyMapping.hasOwnProperty(sourceBranahUnicodeKey.i)
+                    ? keyMapping[sourceBranahUnicodeKey.i]
+                    : sourceBranahUnicodeKey.i;
 
-            key.key = sourceBranahUnicodeKey.n;
-            key.ctrlKey = sourceBranahUnicodeKey.c;
-            key.shiftKey = sourceBranahUnicodeKey.s;
-            key.ctrlAlt = sourceBranahUnicodeKey.t;
-            key.ctrlAltShift = sourceBranahUnicodeKey.l;
+                const key = {};
 
-            targetUnicodeKeys[mappedKeyIndex] = key;
+                key.key = sourceBranahUnicodeKey.n;
+                key.ctrlKey = sourceBranahUnicodeKey.c;
+                key.shiftKey = sourceBranahUnicodeKey.s;
+                key.ctrlAlt = sourceBranahUnicodeKey.t;
+                key.ctrlAltShift = sourceBranahUnicodeKey.l;
+
+                targetUnicodeKeys[mappedKeyIndex] = key;
+            });
+
+            console.log(targetUnicodeKeys);
+            console.log('Json stringify', JSON.stringify(targetUnicodeKeys));
+
+            document.getElementById("parsedUnicode").innerHTML = JSON.stringify(targetUnicodeKeys, null, 4);
         });
-
-        console.log(targetUnicodeKeys);
-        console.log('Json stringify', JSON.stringify(targetUnicodeKeys));
-
-        document.getElementById("parsedUnicode").innerHTML = JSON.stringify(targetUnicodeKeys, null, 4);
 
     </script>
 </body>
