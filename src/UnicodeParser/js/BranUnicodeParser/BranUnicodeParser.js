@@ -48,7 +48,7 @@ class BranUnicodeParser {
             k33 : 'K33_75_K',
             k34 : 'K34_76_L',
             k35 : 'K35_186_CO', //COLON
-            k36 : 'K36_192_AS', //Apostrophe
+            k36 : 'K36_192_AP', //Apostrophe
 
             //Third Alphabetical Row
             k37 : 'K37_90_Z',
