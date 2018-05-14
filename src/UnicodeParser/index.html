@@ -53,6 +53,7 @@
 
     </main>
 
+    <script src="js/BranUnicodeParser/BranUnicodeParser.js"></script>
     <script type="application/javascript">
 
         const keyMapping = {
@@ -61,33 +62,11 @@
         };
 
         document.querySelector('#parse').addEventListener('click', function(event){
-            const sourceBranahUnicodeKeys = JSON.parse(document.getElementById('unicodeInput').value);
+            const sourceUnicodeKeys = JSON.parse(document.getElementById('unicodeInput').value);
 
-            console.log('Unicode Input', sourceBranahUnicodeKeys);
+            const parsedUnicodeKeys = new BranUnicodeParser(sourceUnicodeKeys).getParsedUnicode();
 
-            const targetUnicodeKeys = {};
-            sourceBranahUnicodeKeys.forEach(function (sourceBranahUnicodeKey, index) {
-                console.log(sourceBranahUnicodeKey);
-
-                const mappedKeyIndex = keyMapping.hasOwnProperty(sourceBranahUnicodeKey.i)
-                    ? keyMapping[sourceBranahUnicodeKey.i]
-                    : sourceBranahUnicodeKey.i;
-
-                const key = {};
-
-                key.key = sourceBranahUnicodeKey.n;
-                key.ctrlKey = sourceBranahUnicodeKey.c;
-                key.shiftKey = sourceBranahUnicodeKey.s;
-                key.ctrlAlt = sourceBranahUnicodeKey.t;
-                key.ctrlAltShift = sourceBranahUnicodeKey.l;
-
-                targetUnicodeKeys[mappedKeyIndex] = key;
-            });
-
-            console.log(targetUnicodeKeys);
-            console.log('Json stringify', JSON.stringify(targetUnicodeKeys));
-
-            document.getElementById("parsedUnicode").innerHTML = JSON.stringify(targetUnicodeKeys, null, 4);
+            document.getElementById("parsedUnicode").innerHTML = JSON.stringify(parsedUnicodeKeys, null, 4);
         });
 
     </script>
