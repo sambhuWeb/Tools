@@ -19,3 +19,4 @@ package-lock.json
 /nbproject/
 .DS_Store
 /src/.DS_Store
+.idea
