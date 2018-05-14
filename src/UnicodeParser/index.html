@@ -1,0 +1,185 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Unicode Parser</title>
+    <link
+        rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+        ntegrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+        crossorigin="anonymous"
+    >
+    <style>
+        body {
+            padding-top: 5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">Unicode Parser</a>
+        <button class="navbar-toggler" type="button" >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+
+    <main role="main" class="container">
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="unicodeInput">
+                    <strong>INPUT: Enter source unicode array of objects:</strong>
+                </label>
+                <textarea
+                        class="form-control"
+                        id="unicodeInput"
+                        rows="15"
+                ></textarea>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="parsedUnicode">
+                    <strong>Parsed Unicode</strong>
+                </label>
+                <textarea
+                        class="form-control"
+                        id="parsedUnicode"
+                        rows="15"
+                ></textarea>
+            </div>
+        </div>
+
+        <button id="parse" class="btn btn-primary col-md-2">Parse</button>
+
+    </main>
+
+    <!--<textarea rows="30" cols="70" id="unicode"></textarea>-->
+
+    <script type="application/javascript">
+
+        document.querySelector('#parse').addEventListener('click', function(event){
+            const sourceUnicodeKeys = document.getElementById('unicodeInput').value.replace(/\r\n/g,"\n").split("\n");
+
+            console.log('Unicode Input', sourceUnicodeKeys);
+
+//            const targetUnicodeKeys = {};
+//            sourceUnicodeKeys.forEach(function (sourceBranahUnicodeKey, index) {
+//                console.log(sourceBranahUnicodeKey);
+//
+//                const mappedKeyIndex = keyMapping.hasOwnProperty(sourceBranahUnicodeKey.i)
+//                    ? keyMapping[sourceBranahUnicodeKey.i]
+//                    : sourceBranahUnicodeKey.i;
+//
+//                const key = {};
+//
+//                key.key = sourceBranahUnicodeKey.n;
+//                key.ctrlKey = sourceBranahUnicodeKey.c;
+//                key.shiftKey = sourceBranahUnicodeKey.s;
+//                key.ctrlAlt = sourceBranahUnicodeKey.t;
+//                key.ctrlAltShift = sourceBranahUnicodeKey.l;
+//
+//                targetUnicodeKeys[mappedKeyIndex] = key;
+//            });
+//
+//            console.log(targetUnicodeKeys);
+//            console.log('Json stringify', JSON.stringify(targetUnicodeKeys));
+//
+//            document.getElementById("parsedUnicode").innerHTML = JSON.stringify(targetUnicodeKeys, null, 4);
+
+        });
+
+        //Expected:
+
+        /*
+         //Expected Output
+         {
+             'K26_65_A': {
+             key: "ब",
+             ctrlKey: "",
+             shiftKey: "्",
+             ctrlAlt: "ctrlAlt",
+             ctrlAltShift: "ctrlAltShift",
+             },
+             'K27_83_S': {
+             key: "क",
+             ctrlKey: "",
+             shiftKey: "",
+             ctrlAlt: "ctrlAlt",
+             ctrlAltShift: "ctrlAltShift",
+             }
+         }
+
+
+         //Parsed Output
+         {
+             "K26_65_A" :
+             {
+                 "key":"ब",
+                 "ctrlKey":"0",
+                 "shiftKey":"",
+                 "ctrlAlt":"",
+                 "ctrlAltShift":""
+             },
+             "K27_83_S" :
+             {
+                 "key":"क",
+                 "ctrlKey":"0",
+                 "shiftKey":"",
+                 "ctrlAlt":"",
+                 "ctrlAltShift":""
+             }
+         }
+         */
+
+        const keyMapping = {
+            k26: 'K26_65_A',
+            k27: 'K27_83_S'
+        };
+
+        const sourceBranahUnicodeKeys = [
+            {
+                "i": "k26",
+                "c": "0", //ctrl
+                "n": "ब", //normal
+                "s": "", //shift
+                "l": "", //ctrl+alt+shift
+                "t": "", //ctrl_alt
+                "f": ""
+            }, {
+                "i": "k27",
+                "c": "0",
+                "n": "क",
+                "s": "",
+                "l": "",
+                "t": "",
+                "f": ""
+            }
+        ];
+
+        const targetUnicodeKeys = {};
+        sourceBranahUnicodeKeys.forEach(function (sourceBranahUnicodeKey, index) {
+            console.log(sourceBranahUnicodeKey);
+
+            const mappedKeyIndex = keyMapping.hasOwnProperty(sourceBranahUnicodeKey.i)
+                ? keyMapping[sourceBranahUnicodeKey.i]
+                : sourceBranahUnicodeKey.i;
+
+            const key = {};
+
+            key.key = sourceBranahUnicodeKey.n;
+            key.ctrlKey = sourceBranahUnicodeKey.c;
+            key.shiftKey = sourceBranahUnicodeKey.s;
+            key.ctrlAlt = sourceBranahUnicodeKey.t;
+            key.ctrlAltShift = sourceBranahUnicodeKey.l;
+
+            targetUnicodeKeys[mappedKeyIndex] = key;
+        });
+
+        console.log(targetUnicodeKeys);
+        console.log('Json stringify', JSON.stringify(targetUnicodeKeys));
+
+        document.getElementById("parsedUnicode").innerHTML = JSON.stringify(targetUnicodeKeys, null, 4);
+
+    </script>
+</body>
+</html>
