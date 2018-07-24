@@ -23,7 +23,7 @@
 <body>
 	<div id="input_tool_wrapper">
 		<textarea id="input_tool" rows="20"></textarea>
-		<div id="input_tool_helper"></div>
+		<div id="input_tool_helper"><em>Additional options appears here!</em></div>
 	</div>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -47,7 +47,11 @@
                 // On clicking backspace remove the helper
                 // TODO: display the option of the selected one
                 if (e.which == 8) {
+                    /**
+					 * Extract to separate function
+					 */
                     $('#input_tool_helper').empty();
+                    $('#input_tool_helper').append('<em>Additional options appears here!</em>');
                 }
 			});
 
@@ -96,12 +100,13 @@
 						 * Replace the last word on the textaread with the first suggestion
                          */
 						words[words.length - 1] = response[0];
-						words = words.join(" ");
+						words = words.join(' ');
 
 						$('#input_tool').val(words + ' ');
 					});
 				} else {
                     $('#input_tool_helper').empty();
+                    $('#input_tool_helper').append('<em>Additional options appears here!</em>');
 				}
 			});
 		});
