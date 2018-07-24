@@ -55,7 +55,7 @@
                 }
 			});
 
-			$('#input_tool').keypress( function (e) {
+			$('#input_tool').on('keyup', function (e) {
 				if (e.which == 32 || e.which == 229) { //on clicking space 228 for android;
 					let words = $(this).val().split(' ');
 
@@ -64,7 +64,7 @@
                     console.log('words length minus 2', words.length - 2);
 
 					//Need to take care of space, plus index 0 - so need to deduct 2 to get last word
-					let lastWord = words[words.length - 1];
+					let lastWord = words[words.length - 2];
 					console.log('last word', lastWord);
 
                     googleTransliterate(lastWord, 'ne-t-i0-und', 5)
@@ -90,19 +90,19 @@
 						$('.btn').on('click', function(e) {
 							let buttonClickedValue = $(this).html();
 
-							let words = $('#input_tool').val().trim().split(' ');
-							words[words.length - 1] = buttonClickedValue;
+							let words = $('#input_tool').val().split(' ');
+							words[words.length - 2] = buttonClickedValue;
 							words = words.join(' ');
-							$('#input_tool').val(words + ' ');
+							$('#input_tool').val(words);
 						});
 
                         /**
 						 * Replace the last word on the textaread with the first suggestion
                          */
-						words[words.length - 1] = response[0];
+						words[words.length - 2] = response[0];
 						words = words.join(' ');
 
-						$('#input_tool').val(words + ' ');
+						$('#input_tool').val(words);
 					});
 				} else {
                     $('#input_tool_helper').empty();
