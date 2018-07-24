@@ -40,7 +40,7 @@
 
 		$(document).ready(function() {
 			$('#input_tool').on('keyup', function (e) {
-				if (e.which == 32) { //on clicking space;
+				if (e.which == 32 || e.which == 229) { //on clicking space 228 for android;
 					let words = $(this).val().split(' ');
 
 					//Need to take care of space, plus index 0 - so need to deduct 2 to get last word
