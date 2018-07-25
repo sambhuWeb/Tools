@@ -67,6 +67,10 @@
 					let lastWord = words[words.length - 2];
 					console.log('last word', lastWord);
 
+					if (typeof lastWord == 'undefined') {
+					    return;
+					}
+
                     googleTransliterate(lastWord, 'ne-t-i0-und', 5)
 					.then(function(response) {
 						console.log('Transliterated Text', response);
