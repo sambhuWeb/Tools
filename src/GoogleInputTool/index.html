@@ -1,167 +1,164 @@
 <html>
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GIT</title>
 
-	<title>GIT</title>
-
-	<style>
-		#input_tool_wrapper {
-			width: 100%;
-			border: 1px solid #333;
-		}
-		#input_tool {
-			width: 100%;
-		}
-		#input_tool_helper {
-			border: 1px solid #ccc;
-			height: 100px;
-			width: 100%;
-		}
-	</style>
+    <style>
+        #input_tool_wrapper {
+            width: 100%;
+            border: 1px solid #333;
+        }
+        #input_tool {
+            width: 100%;
+        }
+        #input_tool_helper {
+            border: 1px solid #ccc;
+            height: 100px;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
-	<div id="input_tool_wrapper">
-		<textarea id="input_tool" rows="20"></textarea>
-		<div id="input_tool_helper"><em>Additional options appears here!</em></div>
-	</div>
+    <div id="input_tool_wrapper">
+    <textarea id="input_tool" rows="20"></textarea>
+    <div id="input_tool_helper"><em>Additional options appears here!</em></div>
+    </div>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-	<script>
-		console.log('Google Input Tool Test');
+    <script>
+        console.log('Google Input Tool Test');
 
-		// See keyboard navigation in Table Cells
+        // See keyboard navigation in Table Cells
         // https://gist.github.com/josheinstein/5092789
 
-		//Great Dropdown on textarea tutorials:
+        //Great Dropdown on textarea tutorials:
         //http://jsfiddle.net/42zHC/2/
         //https://github.com/component/textarea-caret-position
 
-		$(document).ready(function() {
+        $(document).ready(function() {
 
-		    /**
-			 * Backspace is not detected on keypress, so key up used
-			 */
-		    $('#input_tool').on('keyup', function (e) {
+            /**
+            * Backspace is not detected on keypress, so key up used
+            */
+            $('#input_tool').on('keyup', function (e) {
                 // On clicking backspace remove the helper
                 // TODO: display the option of the selected one
                 if (e.which == 8) {
                     /**
-					 * Extract to separate function
-					 */
+                     * Extract to separate function
+                     */
                     $('#input_tool_helper').empty();
                     $('#input_tool_helper').append('<em>Additional options appears here!</em>');
                 }
-			});
+            });
 
-			$('#input_tool').on('keyup', function (e) {
-				if (e.which == 32 || e.which == 229) { //on clicking space 228 for android;
-					let words = $(this).val().split(' ');
+            $('#input_tool').on('keyup', function (e) {
+                if (e.which == 32 || e.which == 229) { //on clicking space 228 for android;
+                    let words = $(this).val().split(' ');
 
-					console.log('words', words);
-					console.log('words length', words.length);
+                    console.log('words', words);
+                    console.log('words length', words.length);
                     console.log('words length minus 2', words.length - 2);
 
-					//Need to take care of space, plus index 0 - so need to deduct 2 to get last word
-					let lastWord = words[words.length - 2];
-					console.log('last word', lastWord);
+                    //Need to take care of space, plus index 0 - so need to deduct 2 to get last word
+                    let lastWord = words[words.length - 2];
+                    console.log('last word', lastWord);
 
-					if (typeof lastWord == 'undefined') {
-					    return;
-					}
+                    if (typeof lastWord == 'undefined') {
+                        return;
+                    }
 
                     googleTransliterate(lastWord, 'ne-t-i0-und', 5)
-					.then(function(response) {
-						console.log('Transliterated Text', response);
-
-						/**
-						 * Generate buttons from the response texts and append into the input_tool_helper block.
-						 */
-						let buttons = '';
-						response.forEach(function(input) {
-							buttons += '<button class="btn">' + input + '</button>';
-							console.log('input value', input);
-						});
-
-						//Need Validation
-						$('#input_tool_helper').empty(); //Clear the content of div
-						$('#input_tool_helper').append(buttons); //add the button on the helper block
+                    .then(function(response) {
+                        console.log('Transliterated Text', response);
 
                         /**
-						 * On clicking the button, replace the word.
-                         */
-						$('.btn').on('click', function(e) {
-							let buttonClickedValue = $(this).html();
+                        * Generate buttons from the response texts and append into the input_tool_helper block.
+                        */
+                        let buttons = '';
+                        response.forEach(function(input) {
+                            buttons += '<button class="btn">' + input + '</button>';
+                            console.log('input value', input);
+                        });
 
-							let words = $('#input_tool').val().split(' ');
-							words[words.length - 2] = buttonClickedValue;
-							words = words.join(' ');
-							$('#input_tool').val(words);
-						});
+                        //Need Validation
+                        $('#input_tool_helper').empty(); //Clear the content of div
+                        $('#input_tool_helper').append(buttons); //add the button on the helper block
 
                         /**
-						 * Replace the last word on the textaread with the first suggestion
-                         */
-						words[words.length - 2] = response[0];
-						words = words.join(' ');
+                        * On clicking the button, replace the word.
+                        */
+                        $('.btn').on('click', function(e) {
+                            let buttonClickedValue = $(this).html();
 
-						$('#input_tool').val(words);
-					});
-				} else {
+                            let words = $('#input_tool').val().split(' ');
+                            words[words.length - 2] = buttonClickedValue;
+                            words = words.join(' ');
+                            $('#input_tool').val(words);
+                        });
+
+                        /**
+                        * Replace the last word on the textaread with the first suggestion
+                        */
+                        words[words.length - 2] = response[0];
+                        words = words.join(' ');
+
+                        $('#input_tool').val(words);
+                    });
+                } else {
                     $('#input_tool_helper').empty();
                     $('#input_tool_helper').append('<em>Additional options appears here!</em>');
-				}
-			});
-		});
+                }
+            });
+        });
 
-		let googleTransliterate = function(sourceText, inputLanguageCode, maxResult) {
-			return new Promise(function(resolve, reject) {
-				let encodedUrl = encodeURI('https://inputtools.google.com/request?text=' + sourceText + '&itc=' + inputLanguageCode + '&num=' + maxResult + '&cp=0&cs=1&ie=utf-8&oe=utf-8&app=demopage');
+        let googleTransliterate = function(sourceText, inputLanguageCode, maxResult) {
+            return new Promise(function(resolve, reject) {
+                let encodedUrl = encodeURI('https://inputtools.google.com/request?text=' + sourceText + '&itc=' + inputLanguageCode + '&num=' + maxResult + '&cp=0&cs=1&ie=utf-8&oe=utf-8&app=demopage');
 
-				// Do the usual XHR stuff
-				let request = new XMLHttpRequest();
-				request.open('GET', encodedUrl);
+                // Do the usual XHR stuff
+                let request = new XMLHttpRequest();
+                request.open('GET', encodedUrl);
 
-				request.onreadystatechange = function() {
-					// This is called even on 404 etc
-					// so check the status
-					if (request.status == 200) {
-						let json = JSON.parse(request.response);
+                request.onreadystatechange = function() {
+                    // This is called even on 404 etc
+                    // so check the status
+                    if (request.status == 200) {
+                        let json = JSON.parse(request.response);
 
-						// Resolve the promise with the response text
-						resolve(json[1][0][1]);
-					} else {
-						// Otherwise reject with the status text
-						// which will hopefully be a meaningful error
-						reject('Rejected !' + request.status);
-					}
-				};
+                        // Resolve the promise with the response text
+                        resolve(json[1][0][1]);
+                    } else {
+                        // Otherwise reject with the status text
+                        // which will hopefully be a meaningful error
+                        reject('Rejected !' + request.status);
+                    }
+                };
 
-				// Handle network errors
-				request.onerror = function() {
-				  reject(Error("Network Error"));
-				};
+                // Handle network errors
+                request.onerror = function() {
+                    reject(Error("Network Error"));
+                };
 
-				// Make the request
-				request.send();
-			});
-		}
+                // Make the request
+                request.send();
+            });
+        }
 
         /**
-		 * Test on the console
-         * @type {string}
-         */
-		let sourceText = 'sambhu';
-		let inputLanguage = 'ne-t-i0-und';
-		let maxResult = 8;
+        * Test on the console
+        * @type {string}
+        */
+        let sourceText = 'sambhu';
+        let inputLanguage = 'ne-t-i0-und';
+        let maxResult = 8;
 
         googleTransliterate(sourceText, inputLanguage, maxResult)
-		.then(function(response) {
-			console.log('Transliterated Text', response);
-		});
-
-	</script>
-
+        .then(function(response) {
+            console.log('Transliterated Text', response);
+        });
+    </script>
 </body>
 </html>
