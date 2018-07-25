@@ -74,6 +74,8 @@
                     .then(function(response) {
                         console.log('Transliterated Text', response);
 
+                        response.push(lastWord);
+
                         /**
                         * Generate buttons from the response texts and append into the input_tool_helper block.
                         */
