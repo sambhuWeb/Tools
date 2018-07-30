@@ -40,17 +40,113 @@
         $(document).ready(function() {
 
             /**
+             * Keeps the mapping of transliterated input word and its english word
+             *
+             * {
+             *     सम्भु : "sambhu",
+             *     राज : "raj"
+             * }
+             */
+            var transliteratedWordEnglishMapping = {};
+
+            /**
             * Backspace is not detected on keypress, so key up used
             */
             $('#input_tool').on('keyup', function (e) {
                 // On clicking backspace remove the helper
-                // TODO: display the option of the selected one
                 if (e.which == 8) {
                     /**
                      * Extract to separate function
                      */
                     $('#input_tool_helper').empty();
                     $('#input_tool_helper').append('<em>Additional options appears here!</em>');
+                }
+            });
+
+            /**
+             * On clicking the word on the textarea.
+             * 1. Get the selected word for e.g.: सम्भु
+             * 2. Get the english version of the selected word from the transliteratedWordEnglishMapping.
+             *    In this case, it will be 'sambhu'
+             * 3. Get the additional options as an array:
+             *    For example,  ["सम्भु", "संभु", "समभु", "सम्भू", "संभू", "sambhu"]
+             * 4. Now on clicking the option :
+             *    a) Update the transliteratedWordEnglishMapping
+             *    b) replaced the selectedWord with the one clicked.
+             */
+            $('#input_tool').click(function(e) {
+                var stopCharacters = [' ', '\n', '\r', '\t'];
+
+                var text = $(this).val();
+                var start = $(this)[0].selectionStart;
+                var end = $(this)[0].selectionEnd;
+
+                while (start > 0) {
+                    if (stopCharacters.indexOf(text[start]) == -1) {
+                        --start;
+                    } else {
+                        break;
+                    }
+                };
+                ++start;
+                while (end < text.length) {
+                    if (stopCharacters.indexOf(text[end]) == -1) {
+                        ++end;
+                    } else {
+                        break;
+                    }
+                }
+
+                // 1. Get the selected word for e.g.: सम्भु
+                var selectedWord = text.substr(start, end - start);
+
+                if (selectedWord) {
+                    //2. Get the english version of the selected word from the transliteratedWordEnglishMapping.
+                    var selectedWordEnglishVersion = transliteratedWordEnglishMapping[selectedWord];
+
+                    console.log(selectedWord);
+                    console.log(selectedWordEnglishVersion);
+
+                    /**
+                     * Some time user would chose to enter the text in english and click it.
+                     * In this case, selected word is the selected word in english version.
+                     */
+                    if (typeof selectedWordEnglishVersion == 'undefined') {
+                        selectedWordEnglishVersion = selectedWord;
+                    }
+
+                    //3. Get the additional options as an array:
+                    googleTransliterate(selectedWordEnglishVersion, 'ne-t-i0-und', 5)
+                    .then(function(response) {
+                        response.push(selectedWordEnglishVersion);
+
+                        let buttons = '';
+                        response.forEach(function(input) {
+                            buttons += '<button class="btn">' + input + '</button>';
+                            console.log('input value', input);
+                        });
+
+                        //Need Validation
+                        $('#input_tool_helper').empty(); //Clear the content of div
+                        $('#input_tool_helper').append(buttons); //add the button on the helper block
+
+                        //4. Now on clicking the option :
+                        $('.btn').on('click', function(e) {
+                            let buttonClickedValue = $(this).html();
+
+                            //4 a) Update the transliteratedWordEnglishMapping
+                            transliteratedWordEnglishMapping[buttonClickedValue] = selectedWordEnglishVersion;
+
+                            /**
+                             * Using start and end value slice the text and add the buttonClickedValue
+                             */
+                            var modifiedTexts = text.slice(0, start) + buttonClickedValue + text.slice(end);
+
+                            // b) replaced the selectedWord with the one clicked.
+                            $('#input_tool').val(modifiedTexts);
+
+                        });
+                    });
                 }
             });
 
@@ -72,8 +168,6 @@
 
                     googleTransliterate(lastWord, 'ne-t-i0-und', 5)
                     .then(function(response) {
-                        console.log('Transliterated Text', response);
-
                         response.push(lastWord);
 
                         /**
@@ -95,6 +189,8 @@
                         $('.btn').on('click', function(e) {
                             let buttonClickedValue = $(this).html();
 
+                            transliteratedWordEnglishMapping[buttonClickedValue] = lastWord;
+
                             let words = $('#input_tool').val().split(' ');
                             words[words.length - 2] = buttonClickedValue;
                             words = words.join(' ');
@@ -102,10 +198,12 @@
                         });
 
                         /**
-                        * Replace the last word on the textaread with the first suggestion
-                        */
+                         * Replace the last word on the textarea with the first suggestion
+                         */
                         words[words.length - 2] = response[0];
                         words = words.join(' ');
+
+                        transliteratedWordEnglishMapping[response[0]] = lastWord;
 
                         $('#input_tool').val(words);
                     });
@@ -152,17 +250,17 @@
         }
 
         /**
-        * Test on the console
-        * @type {string}
-        */
-        let sourceText = 'sambhu';
-        let inputLanguage = 'ne-t-i0-und';
-        let maxResult = 8;
-
-        googleTransliterate(sourceText, inputLanguage, maxResult)
-        .then(function(response) {
-            console.log('Transliterated Text', response);
-        });
+         * Test on the console
+         * @type {string}
+         */
+        // let sourceText = 'sambhu';
+        // let inputLanguage = 'ne-t-i0-und';
+        // let maxResult = 8;
+        //
+        // googleTransliterate(sourceText, inputLanguage, maxResult)
+        // .then(function(response) {
+        //     console.log('Transliterated Text', response);
+        // });
     </script>
 </body>
 </html>
