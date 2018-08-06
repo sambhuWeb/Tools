@@ -37,6 +37,10 @@
 
         $(document).ready(function() {
 
+            let request = new XMLHttpRequest();
+            let inputLanguageCode = 'ne-t-i0-und';
+            let maxResult = 5;
+
             /**
              * Keeps the mapping of transliterated input word and its english word
              *
@@ -111,7 +115,7 @@
                     }
 
                     //3. Get the additional options as an array:
-                    googleTransliterate(selectedWordEnglishVersion, 'ne-t-i0-und', 5)
+                    googleTransliterate(request, selectedWordEnglishVersion, inputLanguageCode, maxResult)
                     .then(function(response) {
                         response.push(selectedWordEnglishVersion);
 
@@ -161,7 +165,7 @@
                         return;
                     }
 
-                    googleTransliterate(lastWord, 'ne-t-i0-und', 5)
+                    googleTransliterate(request, lastWord, inputLanguageCode, maxResult)
                     .then(function(response) {
                         response.push(lastWord);
 
@@ -209,21 +213,30 @@
             });
         });
 
-        let googleTransliterate = function(sourceText, inputLanguageCode, maxResult) {
+        /**
+         *
+         * @param request               new XMLHttpRequest()
+         * @param sourceText            Source text to be transliterated.
+         * @param inputLanguageCode     Language code, for e.g. ne-t-i0-und for Nepal.
+         * @param maxResult             Max number of transliterated results.
+         * @return {Promise<any>}
+         */
+        let googleTransliterate = function(request, sourceText, inputLanguageCode, maxResult) {
             return new Promise(function(resolve, reject) {
                 let encodedUrl = encodeURI('https://inputtools.google.com/request?text=' + sourceText + '&itc=' + inputLanguageCode + '&num=' + maxResult + '&cp=0&cs=1&ie=utf-8&oe=utf-8&app=demopage');
 
                 // Do the usual XHR stuff
-                let request = new XMLHttpRequest();
                 request.open('GET', encodedUrl);
 
-                request.onreadystatechange = function() {
-                    if (request.response !== "") {
-                        // This is called even on 404 etc
-                        // so check the status
-                        if (request.status == 200) {
-                            let json = JSON.parse(request.response);
-
+                request.onreadystatechange = function () {
+                    /**
+                     * The thing about promise resolution is that once rejected or resolved, it can not be rejected or resovled again
+                     * The first time onreadystatechange gets called, the status would be 1, not 4 ... so you reject
+                     * you should only reject if status is 4 (DONE) AND status != 200
+                     */
+                    if (request.readyState == request.DONE) {
+                        if (this.status == 200) {
+                            let json = JSON.parse(this.responseText);
                             // Resolve the promise with the response text
                             resolve(json[1][0][1]);
                         } else {
@@ -251,8 +264,9 @@
         // let sourceText = 'sambhu';
         // let inputLanguage = 'ne-t-i0-und';
         // let maxResult = 8;
+        // let httpRequest = new XMLHttpRequest();
         //
-        // googleTransliterate(sourceText, inputLanguage, maxResult)
+        // googleTransliterate(request, sourceText, inputLanguage, maxResult)
         // .then(function(response) {
         //     console.log('Transliterated Text', response);
         // });
