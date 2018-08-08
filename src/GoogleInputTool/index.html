@@ -40,6 +40,13 @@
             let request = new XMLHttpRequest();
             let inputLanguageCode = 'ne-t-i0-und';
             let maxResult = 5;
+            let ctrlGPressed = false;
+
+            $('#input_tool').on('keydown', function(event) {
+                if (isCtrlG(event)) {
+                    ctrlGPressed = !ctrlGPressed;
+                }
+            });
 
             /**
              * Keeps the mapping of transliterated input word and its english word
@@ -150,6 +157,13 @@
             });
 
             $('#input_tool').on('keyup', function (e) {
+                /**
+                 * If Ctrl G then don't transliterate
+                 */
+                if (ctrlGPressed) {
+                    return;
+                }
+
                 if (e.which == 32 || e.which == 229) { //on clicking space 228 for android;
                     let words = $(this).val().split(' ');
 
@@ -212,6 +226,15 @@
                 }
             });
         });
+
+        function isCtrlG(keyEvent) {
+            if (keyEvent.which === 71 && keyEvent.ctrlKey) {
+                keyEvent.preventDefault();
+                return true;
+            }
+
+            return false;
+        }
 
         /**
          *
