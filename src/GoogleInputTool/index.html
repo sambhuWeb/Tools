@@ -68,7 +68,12 @@
                      * Extract to separate function
                      */
                     $('#input_tool_helper').empty();
-                    $('#input_tool_helper').append('<em>Additional options appears here!</em>');
+
+                    if (ctrlGPressed) {
+                        $('#input_tool_helper').append('<em>English mode enabled. Press (CTRL + G) to switch back.</em>');
+                    } else {
+                        $('#input_tool_helper').append('<em>Additional options appears here!</em>');
+                    }
                 }
             });
 
@@ -161,6 +166,8 @@
                  * If Ctrl G then don't transliterate
                  */
                 if (ctrlGPressed) {
+                    $('#input_tool_helper').empty();
+                    $('#input_tool_helper').append('<em>English mode enabled. Press (CTRL + G) to switch back.</em>');
                     return;
                 }
 
@@ -222,7 +229,12 @@
                     });
                 } else {
                     $('#input_tool_helper').empty();
-                    $('#input_tool_helper').append('<em>Additional options appears here!</em>');
+
+                    if (ctrlGPressed) {
+                        $('#input_tool_helper').append('<em>English mode enabled. Press (CTRL + G) to switch back.</em>');
+                    } else {
+                        $('#input_tool_helper').append('<em>Additional options appears here!</em>');
+                    }
                 }
             });
         });
